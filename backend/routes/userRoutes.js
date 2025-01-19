@@ -1,13 +1,21 @@
-// routes/userRoutes.js
 const express = require('express');
-const router = express.Router();
-const { updateUserProfile, deleteUser } = require('../controllers/userController');
+const { registerUser, loginUser } = require('../controllers/userController');
 const { protect } = require('../middlewares/authMiddleware');
 
-// Update user profile (patient, doctor, or admin)
-router.put('/profile', protect, updateUserProfile);
+const router = express.Router();
 
-// Delete user account (can be accessed by admin or the user themselves)
-router.delete('/:id', protect, deleteUser);
+// User registration route
+router.post('/register', registerUser);
+
+// User login route
+router.post('/login', loginUser);
+
+// User profile route (protected)
+router.get('/profile', protect, (req, res) => {
+    res.status(200).json({ 
+        message: 'Welcome to your profile', 
+        user: req.user // `protect` middleware sets `req.user`
+    });
+});
 
 module.exports = router;

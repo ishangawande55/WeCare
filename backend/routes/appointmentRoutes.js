@@ -1,24 +1,16 @@
-// routes/appointmentRoutes.js
 const express = require('express');
+const { bookAppointment, acceptAppointment, rejectAppointment } = require('../controllers/appointmentController');
+const { protect } = require('../middlewares/authMiddleware');
+
 const router = express.Router();
-const {
-  createAppointment,
-  getAppointmentDetails,
-  updateAppointmentStatus,
-  getUserAppointments,
-} = require('../controllers/appointmentController');
-const { protect, isDoctor, isPatient } = require('../middlewares/authMiddleware');
 
-// Create an appointment (only patients can create)
-router.post('/', protect, isPatient, createAppointment);
+// Book an appointment (patient)
+router.post('/book', protect, bookAppointment);
 
-// Get details of an appointment (can be accessed by patient and doctor)
-router.get('/:id', protect, getAppointmentDetails);
+// Accept an appointment (doctor)
+router.put('/accept/:appointmentId', protect, acceptAppointment);
 
-// Update appointment status (can be accessed by doctor)
-router.put('/:id/status', protect, isDoctor, updateAppointmentStatus);
-
-// Get all appointments of a user (patient or doctor)
-router.get('/user/:userId', protect, getUserAppointments);
+// Reject an appointment (doctor)
+router.put('/reject/:appointmentId', protect, rejectAppointment);
 
 module.exports = router;

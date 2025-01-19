@@ -1,59 +1,71 @@
-// controllers/appointmentController.js
-const Appointment = require('../models/Appointment'); // Assuming you have an Appointment model
+const Appointment = require('../models/Appointment');
+const User = require('../models/User');
+const { generateVideoCallLink } = require('../utils/videoCall'); // Function to generate a video call link
 
 // Book an appointment
 const bookAppointment = async (req, res) => {
-  const { doctorId, patientId, appointmentDate, message } = req.body;
+    const { doctorId, date, timeSlot } = req.body;
+    const patientId = req.user.id;
 
-  try {
-    const newAppointment = new Appointment({ doctorId, patientId, appointmentDate, message, status: 'pending' });
-    await newAppointment.save();
+    try {
+        const doctor = await User.findById(doctorId);
+        if (!doctor || doctor.role !== 'doctor') {
+            return res.status(400).json({ message: 'Doctor not found' });
+        }
 
-    return res.status(201).json({ message: 'Appointment booked successfully' });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: 'Server error' });
-  }
+        const appointment = new Appointment({
+            patient: patientId,
+            doctor: doctorId,
+            date,
+            timeSlot,
+        });
+
+        await appointment.save();
+        res.status(201).json(appointment);
+    } catch (err) {
+        res.status(500).json({ message: 'Server Error', error: err.message });
+    }
 };
 
-// Accept an appointment (doctor)
+// Accept an appointment
 const acceptAppointment = async (req, res) => {
-  const { appointmentId } = req.params;
+    const { appointmentId } = req.params;
+    const doctorId = req.user.id;
 
-  try {
-    const appointment = await Appointment.findById(appointmentId);
-    if (!appointment) {
-      return res.status(404).json({ message: 'Appointment not found' });
+    try {
+        const appointment = await Appointment.findById(appointmentId);
+        if (!appointment || appointment.doctor.toString() !== doctorId) {
+            return res.status(400).json({ message: 'Appointment not found or not assigned to you' });
+        }
+
+        appointment.status = 'accepted';
+        appointment.videoCallLink = generateVideoCallLink(); // Generate a video call link for the appointment
+        await appointment.save();
+
+        res.status(200).json(appointment);
+    } catch (err) {
+        res.status(500).json({ message: 'Server Error', error: err.message });
     }
-
-    appointment.status = 'accepted';
-    await appointment.save();
-
-    return res.status(200).json({ message: 'Appointment accepted' });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: 'Server error' });
-  }
 };
 
-// Reject an appointment (doctor)
+// Reject an appointment
 const rejectAppointment = async (req, res) => {
-  const { appointmentId } = req.params;
+    const { appointmentId } = req.params;
+    const doctorId = req.user.id;
 
-  try {
-    const appointment = await Appointment.findById(appointmentId);
-    if (!appointment) {
-      return res.status(404).json({ message: 'Appointment not found' });
+    try {
+        const appointment = await Appointment.findById(appointmentId);
+        if (!appointment || appointment.doctor.toString() !== doctorId) {
+            return res.status(400).json({ message: 'Appointment not found or not assigned to you' });
+        }
+
+        appointment.status = 'rejected';
+        await appointment.save();
+
+        res.status(200).json(appointment);
+    } catch (err) {
+        res.status(500).json({ message: 'Server Error', error: err.message });
     }
-
-    appointment.status = 'rejected';
-    await appointment.save();
-
-    return res.status(200).json({ message: 'Appointment rejected' });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: 'Server error' });
-  }
 };
 
 module.exports = { bookAppointment, acceptAppointment, rejectAppointment };
