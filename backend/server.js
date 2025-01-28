@@ -7,11 +7,9 @@ const appointmentRoutes = require('./routes/appointmentRoutes');
 const http = require('http');
 const { Server } = require('socket.io');
 const bodyParser = require('body-parser');
+const adminRoutes = require('./routes/adminRoutes');
 
-// Import the deployed contract (import from the correct path)
-const deployContracts = require('../blockchain/scripts/deployContracts');
-const blockchainLedger = deployContracts();
-const appointmentContract = blockchainLedger.get('AppointmentContract');
+
 
 // Load environment variables
 dotenv.config();
@@ -65,6 +63,10 @@ app.use('/api/users', userRoutes);
 
 // Appointment Routes
 app.use('/api/appointments', appointmentRoutes);
+
+
+// Admin Routes
+app.use('/api/admin', adminRoutes);
 
 
 // Blockchain API Routes

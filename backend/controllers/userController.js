@@ -2,11 +2,15 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-// Register a user
+// @desc Login a user
+// @desc Register a new user
+// @route POST /api/users/register
+// @access Public
 const registerUser = async (req, res) => {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, specialization, licenseCID } = req.body;
 
     try {
+        // Check if the user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'User already exists' });
@@ -24,11 +28,12 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     try {
+        // Check if the user exists
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-
+        // Check if the password matches
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         if (!isPasswordMatch) {
             return res.status(401).json({ message: 'Invalid credentials' });
@@ -37,7 +42,7 @@ const loginUser = async (req, res) => {
         const token = jwt.sign(
             { id: user._id, role: user.role },
             process.env.JWT_SECRET,
-            { expiresIn: '1d' }
+            { expiresIn: '1d' } //Token valid for 1 day
         );
 
         res.status(200).json({
