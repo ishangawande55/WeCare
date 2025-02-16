@@ -1,128 +1,68 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const connectDB = require('./config/db');
-const userRoutes = require('./routes/userRoutes');
-const appointmentRoutes = require('./routes/appointmentRoutes');
-const http = require('http');
-const { Server } = require('socket.io');
-const bodyParser = require('body-parser');
-const adminRoutes = require('./routes/adminRoutes');
+const express = require("express");
+const Web3 = require("web3");
+const { ethers } = require("ethers");
+const contractABI = require("./contracts/PatientRecords.json").abi;
+const uploadToIPFS = require("./ipfs");
+require("dotenv").config();
 
-
-
-// Load environment variables
-dotenv.config();
-
-// Initialize app
 const app = express();
+app.use(express.json());
+app.use(require("cors")());
 
-// Middleware
-app.use(express.json()); // Parses JSON requests
-app.use(cors());         // Allows cross-origin requests
 
-// Connect to MongoDB
-connectDB();
+const web3 = new Web3("https://sepolia.infura.io/v3/" + process.env.INFURA_PROJECT_ID);
+const contractAddress = "0xYourNewContractAddress";
+const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-const server = http.createServer(app); // Wrap Express app in an HTTP server
-const io = new Server(server, {
-    cors: {
-        origin: 'http://localhost:3000', // Allow requests from frontend
-        methods: ['GET', 'POST'],
-    },
+app.post("/addRecord", async (req, res) => {
+    const { patient, recordData, sender } = req.body;
+
+    try {
+        // Upload record to IPFS
+        const ipfsHash = await uploadToIPFS(recordData);
+
+        // Store hash on blockchain
+        const tx = await contract.methods.addRecord(patient, ipfsHash).send({ from: sender });
+
+        res.json({ success: true, txHash: tx.transactionHash, ipfsHash });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
 
-io.on('connection', (socket) => {
-    console.log('A user connected:', socket.id);
+// Meassaging function
 
-    // Join a room for patient-doctor communication
-    socket.on('joinRoom', ({ roomId }) => {
-        socket.join(roomId);
-        console.log(`User joined room: ${roomId}`);
-    });
+async function encryptMessage(message, receiverAddress) {
+    const publicKey = await web3.eth.getEncryptionPublicKey(receiverAddress);
+    return ethers.utils.hexlify(Buffer.from(publicKey));
+}
 
-    // Listen for messages
-    socket.on('sendMessage', (message) => {
-        const { roomId, senderId, text } = message;
-        io.to(roomId).emit('receiveMessage', { senderId, text, timestamp: new Date() });
-    });
+app.post("/sendMessage", async (req, res) => {
+    const { sender, receiver, message } = req.body;
 
-    socket.on('disconnect', () => {
-        console.log('User disconnected:', socket.id);
-    });
+    try {
+        const encryptedMessage = await encryptMessage(message, receiver);
+        const ipfsHash = await uploadToIPFS({ sender, receiver, encryptedMessage });
+
+        res.json({ success: true, ipfsHash });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
 
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
 
-// Test route
-app.get('/', (req, res) => {
-    res.send('API is running...');
+app.use(helmet()); // Adds security headers
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per 15 minutes
+    message: "Too many requests, please try again later.",
 });
 
-// User Routes
-app.use('/api/users', userRoutes);
+app.use(limiter);
 
-// Appointment Routes
-app.use('/api/appointments', appointmentRoutes);
-
-
-// Admin Routes
-app.use('/api/admin', adminRoutes);
-
-
-// Blockchain API Routes
-app.post('/appointments', (req, res) => {
-    const { patientID, doctorID, reason } = req.body;
-  
-    if (!patientID || !doctorID || !reason) {
-      return res.status(400).json({ message: 'Missing required fields' });
-    }
-  
-    try {
-      const appointmentID = appointmentContract.bookAppointment(patientID, doctorID, reason);
-      return res.status(200).json({ appointmentID });
-    } catch (err) {
-      return res.status(500).json({ message: err.message });
-    }
-  });
-  
-  app.get('/appointments/:appointmentID', (req, res) => {
-    const { appointmentID } = req.params;
-    const { userID } = req.query; // Could be patient or doctor ID
-  
-    try {
-      const appointment = appointmentContract.viewAppointment(appointmentID, userID);
-      return res.status(200).json(appointment);
-    } catch (err) {
-      return res.status(500).json({ message: err.message });
-    }
-  });
-  
-  app.post('/appointments/respond', (req, res) => {
-    const { appointmentID, doctorID, response } = req.body;
-  
-    try {
-      appointmentContract.respondToAppointment(appointmentID, doctorID, response);
-      const updatedAppointment = appointmentContract.viewAppointment(appointmentID, doctorID);
-      return res.status(200).json(updatedAppointment);
-    } catch (err) {
-      return res.status(500).json({ message: err.message });
-    }
-  });
-  
-  app.post('/appointments/schedule', (req, res) => {
-    const { appointmentID, doctorID, scheduledTime } = req.body;
-  
-    try {
-      appointmentContract.scheduleAppointment(appointmentID, doctorID, scheduledTime);
-      const scheduledAppointment = appointmentContract.viewAppointment(appointmentID, doctorID);
-      return res.status(200).json(scheduledAppointment);
-    } catch (err) {
-      return res.status(500).json({ message: err.message });
-    }
-  });
-
-// Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+app.listen(8000, () => {
+    console.log("Server running on port 8000");
 });
