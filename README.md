@@ -33,13 +33,6 @@ GET PINATA SECRET KEY
 URL: https://pinata.cloud
 ```
 
-### Test Faucets
-Alchemy will provide you with some free test faucets which you can transfer to your wallet address for deploying the contract.
-```
-Get: Free Test Faucets
-URL: https://www.theblockchaincoders.com/resource
-```
-
 ### RemixID
 We are using RemixID for deploying the contract and generation of the ABI in the project, but you can use any other tools like Hardhat, etc.
 ```
