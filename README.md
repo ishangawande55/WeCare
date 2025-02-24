@@ -1,137 +1,70 @@
-# Medical Health Management Blockchain Dapp
+# weCare - Decentralized Telemedicine Platform
 
-Build & Deploy a Medical Health Management Blockchain Dapp | Solidity, Hardhat, Next.js, Context AP and web3 providers
+## Project Description
+weCare is a decentralized telemedicine platform built on Ethereum that enables secure, efficient, and transparent doctor-patient interactions. It leverages blockchain technology to provide immutable medical records, smart contract-based consultations, and encrypted messaging. The platform integrates with Pinata IPFS for decentralized data storage, OpenAI for AI-driven insights, and ANKR for blockchain RPC services. weCare ensures patient privacy, trust, and seamless accessibility, making healthcare more inclusive and borderless.
 
-In this comprehensive tutorial, we will guide you through the process of building and deploying a Medical Health Management Dapp on the blockchain. This step-by-step video covers everything from setting up the development environment to deploying the smart contracts and building a user-friendly frontend. Here's what we'll cover:
+Key Features:
+- **Secure Doctor-Patient Interactions**: Blockchain-based consultations with end-to-end encryption.
+- **Smart Contracts**: Automated agreements for consultation fees and prescriptions.
+- **Immutable Medical Records**: Patients have full control over their health data stored on IPFS.
+- **Decentralized Messaging & Video Calls**: Integrated with Zoom for virtual appointments.
+- **Payment System**: Supports cryptocurrency transactions for consultations and medical services.
 
-## Project Overview
+## Prerequisites
 
-![alt text](https://www.daulathussain.com/wp-content/uploads/2024/07/Build-Deploy-a-Medical-Health-Management-Blockchain-Dapp-Solidity-Hardhat-Nextjs-Context-AP-and-web3-providers.jpg)
-
-Kindly follow the following Instructions to run the project in your system and install the necessary requirements
-
-- [Final Source Code](https://www.theblockchaincoders.com/sourceCode/build-and-deploy-blockchain-web3-tools:-next.js-solana-binance-solidity-and-ico-marketplace)
-
-#### Setup Video
-
-- [Final Code Setup video](https://youtu.be/0TwuL8V9zUE?si=UFuWkzh-DofBndjp)
-
+### Install VS Code Editor
 ```
-  WATCH: Setup & Demo Of Project
+GET: VsCode Editor
+URL: https://code.visualstudio.com/download
 ```
 
-#### Install Vs Code Editor
-
-```https://code.visualstudio.com/download
-  GET: VsCode Editor
+### NodeJs & NPM Version
+```
+NodeJs: v18.17.1 (MUST)
+VIDEO: https://youtu.be/PIR0oBVowXU?si=_jVYKmd94tPjmuQR
+NPM: 8.19.2
+URL: https://nodejs.org/en/download
 ```
 
-#### NodeJs & NPM Version
-
-```https://nodejs.org/en/download
-  NodeJs: v18.12.1
-  NPM: 8.19.2
+### Pinata
+```
+GET PINATA API KEY
+GET PINATA SECRET KEY
+URL: https://pinata.cloud
 ```
 
-#### Pinata
-
-```https://pinata.cloud
- GET PINATA API KEY
- GET PINATA SECRET KEY
+### Test Faucets
+Alchemy will provide you with some free test faucets which you can transfer to your wallet address for deploying the contract.
 ```
-
-#### Clone Starter File
-
-```https://github.com/daulathussain/Airdrop-Crypto-Starter-File
-  GET: Project Starter File Download
-```
-
-All you need to follow the complete project and follow the instructions which are explained in the tutorial by Daulat
-
-## Final Code Instruction
-
-If you download the final source code then you can follow the following instructions to run the Dapp successfully
-
-#### Setup Video
-
-```
-  WATCH: Setup & Demo Of Project
-```
-
-#### Final Source Code
-
-```
-  Download the Final Source Code
-  URL: https://www.theblockchaincoders.com/SourceCode
-```
-
-#### Install Vs Code Editor
-
-```
-  GET: VsCode Editor
-  URL: https://code.visualstudio.com/download
-```
-
-#### NodeJs & NPM Version
-
-```
-  NodeJs: v18.17.1 (MUST)
-  VIDEO: https://youtu.be/PIR0oBVowXU?si=_jVYKmd94tPjmuQR
-  NPM: 8.19.2
-  URL: https://nodejs.org/en/download
-```
-
-#### Test Faucets
-
-Alchemy will provide you with some free test faucets which you can transfer to your wallet address for deploying the contract
-
-```
-
 Get: Free Test Faucets
 URL: https://www.theblockchaincoders.com/resource
-
 ```
 
-#### RemixID
-
+### RemixID
 We are using RemixID for deploying the contract and generation of the ABI in the project, but you can use any other tools like Hardhat, etc.
-
-```https://remix-project.org
-  OPEN: RemixID
+```
+OPEN: RemixID
+URL: https://remix-project.org
 ```
 
-#### RPU URL PROVIDER
-
+### RPC URL Provider
 ```
-  NAME: ANKR.COM
-  URL: https://www.ankr.com/rpc/
-```
-
-#### OPEN AI
-
-```https://platform.openai.com/docs/api-reference/introduction
-  # OPEN AI KEY
-  URL: https://platform.openai.com/docs/api-reference/introduction
-  NEXT_PUBLIC_OPEN_AI_KEY=YOUR_OPEN_AI_KEY
+NAME: ANKR.COM
+URL: https://www.ankr.com/rpc/
 ```
 
-#### Pinata IPFS
-
-```https://www.pinata.cloud/
-  # PINATE KEYS
-  URL: https://www.pinata.cloud/
-  NEXT_PUBLIC_PINATA_AIP_KEY = YOUR_PINATA_API_KEY
-  NEXT_PUBLIC_PINATA_SECRECT_KEY = YOUR_PINATA_SECRECT_KEY
+### OpenAI
+```
+# OPEN AI KEY
+URL: https://platform.openai.com/docs/api-reference/introduction
+NEXT_PUBLIC_OPEN_AI_KEY=YOUR_OPEN_AI_KEY
 ```
 
-## Important Links
+### Pinata IPFS
+```
+# PINATA KEYS
+URL: https://www.pinata.cloud/
+NEXT_PUBLIC_PINATA_AIP_KEY=YOUR_PINATA_API_KEY
+NEXT_PUBLIC_PINATA_SECRECT_KEY=YOUR_PINATA_SECRECT_KEY
+```
 
-- [Get Pro Blockchain Developer Course](https://www.theblockchaincoders.com/pro-nft-marketplace)
-- [Support Creator](https://bit.ly/Support-Creator)
-- [All Projects Source Code](https://www.theblockchaincoders.com/SourceCode)
-
-## Authors
-
-- [@theblockchaincoders.com](https://www.theblockchaincoders.com/)
-- [@consultancy](https://www.theblockchaincoders.com/consultancy)
-- [@youtube](https://www.youtube.com/@daulathussain)
