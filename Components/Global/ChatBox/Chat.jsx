@@ -68,7 +68,7 @@ const Chat = ({
             <Chat3 />
           </a>
           <div>
-            <h6 className="mb-1">Chat with Khelesh</h6>
+            <h6 className="mb-1">Chat with us</h6>
             <p className="mb-0 text-success">Online</p>
           </div>
           <div className="dropdown">

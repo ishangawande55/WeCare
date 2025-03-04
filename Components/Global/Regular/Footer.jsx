@@ -6,10 +6,10 @@ const Footer = () => {
       <div className="copyright">
         <p>
           Copyright © Designed &amp; Developed by
-          <a href="https://www.theblockchaincoders.com/" target="_blank">
-            @theblockchaincoders
+          <a href="https://github.com/ishangawande55" target="_blank">
+            @ishangawande55
           </a>
-          2023
+          2025
         </p>
       </div>
     </div>

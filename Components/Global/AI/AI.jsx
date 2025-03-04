@@ -55,10 +55,10 @@ const AI = () => {
       <div className="page-titles">
         <ol className="breadcrumb">
           <li className="breadcrumb-item">
-            <a href="javascript:void(0)">ASK </a>
+            <a href="javascript:void(0)">Ask </a>
           </li>
           <li className="breadcrumb-item active">
-            <a href="javascript:void(0)">ERES AI</a>
+            <a href="javascript:void(0)">weCare AI</a>
           </li>
         </ol>
       </div>

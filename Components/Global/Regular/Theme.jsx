@@ -1155,8 +1155,7 @@ const Theme = () => {
         </div>
         <div className="note-text">
           <span className="text-danger">*Note :</span>This theme switcher is not
-          part of product. It is only for demo. you will get all guideline in
-          documentation. please check{" "}
+          part of this platform.{" "}
           <a
             className="doc text-primary"
             href="/doc/index.html"
