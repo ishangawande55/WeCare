@@ -21,7 +21,6 @@ URL: https://code.visualstudio.com/download
 ### NodeJs & NPM Version
 ```
 NodeJs: v18.17.1 (MUST)
-VIDEO: https://youtu.be/PIR0oBVowXU?si=_jVYKmd94tPjmuQR
 NPM: 8.19.2
 URL: https://nodejs.org/en/download
 ```
